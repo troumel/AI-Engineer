@@ -236,6 +236,73 @@ uvicorn app.main:app --reload
 - Auto-restarts server when code changes (like hot reload in .NET)
 - Only use in development, NOT in production
 
+### Debugging in VS Code
+
+**Setting Up Debugging:**
+
+1. VS Code has been configured with a `.vscode/launch.json` file that includes three debug configurations:
+   - **FastAPI: Debug** - Debug the running API server
+   - **Python: Current File** - Debug the currently open Python file
+   - **Python: Train Model Script** - Debug the model training script
+
+2. **How to use breakpoints (like Visual Studio):**
+
+   - Click in the left margin next to any line number to set a breakpoint (red dot appears)
+   - Press **F5** to start debugging, or click the "Run and Debug" icon in the sidebar
+   - Select the configuration you want (e.g., "FastAPI: Debug")
+   - The program will stop at your breakpoints!
+
+3. **Debugging the FastAPI API:**
+
+   ```
+   Steps:
+   1. Open any file you want to debug (e.g., app/routers/predictions.py)
+   2. Click next to a line number to set a breakpoint
+   3. Press F5 and select "FastAPI: Debug"
+   4. Make an API request (using curl, Postman, or browser)
+   5. The debugger will stop at your breakpoint!
+   ```
+
+4. **While debugging, you can:**
+   - **Step Over (F10)** - Execute current line and move to next
+   - **Step Into (F11)** - Go into function calls
+   - **Step Out (Shift+F11)** - Exit current function
+   - **Continue (F5)** - Continue until next breakpoint
+   - **Inspect variables** - Hover over variables to see their values
+   - **Watch expressions** - Add variables to the Watch panel
+   - **Debug Console** - Execute Python code in the current context
+
+5. **Common debugging scenarios:**
+
+   ```python
+   # Example: Debug a prediction endpoint
+   # 1. Set breakpoint in app/routers/predictions.py at line 66
+   # 2. Press F5 and select "FastAPI: Debug"
+   # 3. Send a request:
+   #    curl -X POST http://localhost:8000/predict \
+   #         -H "Content-Type: application/json" \
+   #         -d '{"median_income": 8.3, "house_age": 41, ...}'
+   # 4. Debugger stops! Inspect the 'request' variable
+   ```
+
+**Comparison to Visual Studio (.NET):**
+
+| VS Code (Python) | Visual Studio (.NET) |
+|------------------|---------------------|
+| F5 to start debugging | F5 to start debugging |
+| F10 to step over | F10 to step over |
+| F11 to step into | F11 to step into |
+| Click margin for breakpoint | Click margin for breakpoint |
+| Debug Console | Immediate Window |
+| Watch panel | Watch window |
+| Call Stack panel | Call Stack window |
+
+**Tips:**
+- Make sure you select the right debug configuration (FastAPI: Debug for the API)
+- Breakpoints won't work if you run `uvicorn` manually in terminal - use F5 instead
+- You can have multiple breakpoints active at once
+- Use conditional breakpoints (right-click breakpoint) for complex debugging
+
 ### API Documentation
 
 FastAPI automatically generates interactive API documentation:

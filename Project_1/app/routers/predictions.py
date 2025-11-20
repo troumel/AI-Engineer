@@ -14,10 +14,7 @@ from app.dependencies import get_prediction_service
 
 # Create router for prediction endpoints
 # All routes here will be under /predict
-router = APIRouter(
-    prefix="/predict",
-    tags=["Predictions"]
-)
+router = APIRouter(prefix="/predict", tags=["Predictions"])
 
 
 @router.post(
@@ -25,11 +22,11 @@ router = APIRouter(
     response_model=PredictionResponse,
     status_code=status.HTTP_200_OK,
     summary="Predict House Price",
-    description="Predict the median house value based on housing features"
+    description="Predict the median house value based on housing features",
 )
 async def predict(
     request: PredictionRequest,
-    service: PredictionService = Depends(get_prediction_service)
+    service: PredictionService = Depends(get_prediction_service),
 ) -> PredictionResponse:
     """
     Predict house price endpoint.
@@ -64,17 +61,18 @@ async def predict(
         # Call the service to make prediction
         # The service handles all the ML logic
         response = service.predict(request)
+
         return response
 
     except ValueError as e:
         # ValueError usually means model not loaded or invalid input
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Prediction error: {str(e)}"
+            detail=f"Prediction error: {str(e)}",
         )
     except Exception as e:
         # Catch any other unexpected errors
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred: {str(e)}"
+            detail=f"An unexpected error occurred: {str(e)}",
         )
