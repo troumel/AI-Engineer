@@ -9,6 +9,8 @@ FastAPI uses a different approach:
 - Use Depends() in route parameters to inject it
 """
 
+from typing import Optional
+
 from app.services.prediction_service import PredictionService
 from app.config import settings
 
@@ -16,7 +18,7 @@ from app.config import settings
 # Global singleton instance of the prediction service
 # Created once when the app starts, reused for all requests
 # Similar to registering as Singleton in .NET DI
-_prediction_service: PredictionService = None
+_prediction_service: Optional[PredictionService] = None
 
 
 def get_prediction_service() -> PredictionService:

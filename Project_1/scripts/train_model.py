@@ -12,6 +12,7 @@ This script:
 # Standard library imports
 import os
 from pathlib import Path
+from typing import cast
 
 # Third-party imports for ML
 import numpy as np
@@ -20,6 +21,7 @@ from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.utils import Bunch
 import joblib
 
 
@@ -37,7 +39,7 @@ def load_data():
 
     # Fetch the dataset from scikit-learn
     # This downloads data the first time, then caches it locally
-    housing = fetch_california_housing()
+    housing = cast(Bunch, fetch_california_housing())
 
     # Extract features (X) and target (y)
     # X is a 2D array: rows = houses, columns = features
@@ -68,14 +70,14 @@ def split_data(X, y, test_size=0.2, random_state=42):
     Returns:
         tuple: (X_train, X_test, y_train, y_test)
     """
-    print(f"\nSplitting data: {int((1-test_size)*100)}% train, {int(test_size*100)}% test...")
+    print(
+        f"\nSplitting data: {int((1-test_size)*100)}% train, {int(test_size*100)}% test..."
+    )
 
     # Split the data randomly
     # random_state=42 ensures we get the same split every time (reproducible)
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=test_size,
-        random_state=random_state
+        X, y, test_size=test_size, random_state=random_state
     )
 
     print(f"Training set: {X_train.shape[0]} samples")
@@ -99,11 +101,11 @@ def train_model(X_train, y_train):
 
     # Create the model with specific parameters
     model = RandomForestRegressor(
-        n_estimators=100,      # Number of trees in the forest
-        max_depth=15,          # Maximum depth of each tree
-        random_state=42,       # For reproducibility
-        n_jobs=-1,             # Use all CPU cores for parallel training
-        verbose=1              # Print progress during training
+        n_estimators=100,  # Number of trees in the forest
+        max_depth=15,  # Maximum depth of each tree
+        random_state=42,  # For reproducibility
+        n_jobs=-1,  # Use all CPU cores for parallel training
+        verbose=1,  # Print progress during training
     )
 
     # Train the model (this is where the "learning" happens!)
@@ -157,11 +159,7 @@ def evaluate_model(model, X_test, y_test):
     print(f"{'='*50}\n")
 
     # Return metrics as a dictionary
-    metrics = {
-        "r2_score": r2,
-        "mae": mae,
-        "rmse": rmse
-    }
+    metrics = {"r2_score": r2, "mae": mae, "rmse": rmse}
 
     return metrics
 
@@ -201,7 +199,7 @@ def save_model(model, model_dir="../models", model_name="house_price_model.jobli
     joblib.dump(model, model_file_path)
 
     print(f"Model saved successfully to: {model_file_path}")
-
+    
     return str(model_file_path)
 
 
@@ -209,9 +207,9 @@ def main():
     """
     Main function that orchestrates the entire training pipeline.
     """
-    print("="*60)
+    print("=" * 60)
     print("HOUSE PRICE PREDICTION MODEL - TRAINING PIPELINE")
-    print("="*60)
+    print("=" * 60)
 
     # Step 1: Load the data
     X, y, feature_names = load_data()
@@ -229,12 +227,12 @@ def main():
     model_path = save_model(model)
 
     # Print final summary
-    print("="*60)
+    print("=" * 60)
     print("TRAINING PIPELINE COMPLETED SUCCESSFULLY!")
-    print("="*60)
+    print("=" * 60)
     print(f"Model saved at: {model_path}")
     print(f"R² Score: {metrics['r2_score']:.4f}")
-    print("="*60)
+    print("=" * 60)
 
 
 # This is Python's entry point (like Main() in C#)

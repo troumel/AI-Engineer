@@ -7,6 +7,10 @@
         {
             "folderPath": "AI Engineer\\Project_1\\app\\routers\\",
             "color": "foldercolorizer.color_0099cc"
+        },
+        {
+            "folderPath": "AI Engineer\\Project_1\\app\\services\\",
+            "color": "foldercolorizer.color_00ccff"
         }
     ]
 }

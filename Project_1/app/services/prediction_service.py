@@ -10,6 +10,7 @@ Handles:
 
 import logging
 from pathlib import Path
+from typing import Optional, Any
 import numpy as np
 import joblib
 
@@ -36,7 +37,7 @@ class PredictionService:
             model_path: Path to the trained model file (.joblib)
         """
         self.model_path = Path(model_path)
-        self.model = None
+        self.model: Optional[Any] = None
         self.model_version = settings.app_version
         logger.info(f"PredictionService initialized with model path: {self.model_path}")
 
@@ -103,20 +104,24 @@ class PredictionService:
             # Convert PredictionRequest to numpy array
             # The model expects features in this specific order:
             # [MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude]
-            features = np.array([[
-                request.median_income,
-                request.house_age,
-                request.avg_rooms,
-                request.avg_bedrooms,
-                request.population,
-                request.avg_occupancy,
-                request.latitude,
-                request.longitude
-            ]])
+            features = np.array(
+                [
+                    [
+                        request.median_income,
+                        request.house_age,
+                        request.avg_rooms,
+                        request.avg_bedrooms,
+                        request.population,
+                        request.avg_occupancy,
+                        request.latitude,
+                        request.longitude,
+                    ]
+                ]
+            )
 
             # Make prediction
             # model.predict() returns array like [4.526] (price in $100,000s)
-            prediction = self.model.predict(features)
+            prediction = self.model.predict(features)  # type: ignore
 
             # Convert prediction to actual dollar amount
             # Model predicts in units of $100,000, so multiply by 100,000
@@ -126,8 +131,7 @@ class PredictionService:
 
             # Return as PredictionResponse
             return PredictionResponse(
-                predicted_price=predicted_price,
-                model_version=self.model_version
+                predicted_price=predicted_price, model_version=self.model_version
             )
 
         except Exception as e:
