@@ -6,7 +6,12 @@ import json
 from pathlib import Path
 
 from app.config import settings
-from app.services.inference_service import InferenceService, TrainingExample, compute_accuracy, compute_macro_f1
+from app.services.inference_service import (
+    InferenceService,
+    TrainingExample,
+    compute_accuracy,
+    compute_macro_f1,
+)
 
 
 def _read_examples(path: Path) -> list[TrainingExample]:
@@ -14,7 +19,9 @@ def _read_examples(path: Path) -> list[TrainingExample]:
     return [TrainingExample(text=item["text"], label=item["label"]) for item in payload]
 
 
-def evaluate_saved_model(data_dir: Path, models_dir: Path, version_name: str) -> dict[str, float | str]:
+def evaluate_saved_model(
+    data_dir: Path, models_dir: Path, version_name: str
+) -> dict[str, float | str]:
     """Load a saved artifact and evaluate it on the test split."""
     service = InferenceService(
         models_directory=str(models_dir),

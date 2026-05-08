@@ -13,7 +13,6 @@ from typing import Any, Iterable
 
 from app.models.schemas import HealthCheckResponse, PredictionResponse
 
-
 STOP_WORDS = {
     "a",
     "an",
@@ -80,7 +79,9 @@ def compute_accuracy(gold_labels: list[str], predicted_labels: list[str]) -> flo
     if not gold_labels:
         return 0.0
 
-    correct = sum(1 for gold, pred in zip(gold_labels, predicted_labels) if gold == pred)
+    correct = sum(
+        1 for gold, pred in zip(gold_labels, predicted_labels) if gold == pred
+    )
     return correct / len(gold_labels)
 
 
@@ -93,17 +94,31 @@ def compute_macro_f1(gold_labels: list[str], predicted_labels: list[str]) -> flo
     f1_scores: list[float] = []
     for label in label_set:
         true_positive = sum(
-            1 for gold, pred in zip(gold_labels, predicted_labels) if gold == label and pred == label
+            1
+            for gold, pred in zip(gold_labels, predicted_labels)
+            if gold == label and pred == label
         )
         false_positive = sum(
-            1 for gold, pred in zip(gold_labels, predicted_labels) if gold != label and pred == label
+            1
+            for gold, pred in zip(gold_labels, predicted_labels)
+            if gold != label and pred == label
         )
         false_negative = sum(
-            1 for gold, pred in zip(gold_labels, predicted_labels) if gold == label and pred != label
+            1
+            for gold, pred in zip(gold_labels, predicted_labels)
+            if gold == label and pred != label
         )
 
-        precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) else 0.0
-        recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) else 0.0
+        precision = (
+            true_positive / (true_positive + false_positive)
+            if (true_positive + false_positive)
+            else 0.0
+        )
+        recall = (
+            true_positive / (true_positive + false_negative)
+            if (true_positive + false_negative)
+            else 0.0
+        )
         if precision + recall == 0.0:
             f1_scores.append(0.0)
             continue
@@ -113,7 +128,9 @@ def compute_macro_f1(gold_labels: list[str], predicted_labels: list[str]) -> flo
     return sum(f1_scores) / len(f1_scores)
 
 
-def build_keyword_profiles(examples: Iterable[TrainingExample]) -> tuple[dict[str, dict[str, int]], dict[str, int]]:
+def build_keyword_profiles(
+    examples: Iterable[TrainingExample],
+) -> tuple[dict[str, dict[str, int]], dict[str, int]]:
     """Build simple per-label keyword counts from labeled examples."""
     profiles: dict[str, Counter[str]] = {}
     priors: Counter[str] = Counter()
@@ -124,8 +141,7 @@ def build_keyword_profiles(examples: Iterable[TrainingExample]) -> tuple[dict[st
         label_profile.update(tokenize_text(example.text))
 
     normalized_profiles = {
-        label: dict(counter.most_common(40))
-        for label, counter in profiles.items()
+        label: dict(counter.most_common(40)) for label, counter in profiles.items()
     }
     return normalized_profiles, dict(priors)
 
@@ -227,7 +243,11 @@ class InferenceService:
         keyword_profiles_path = artifact_dir / "keyword_profiles.json"
         training_config_path = artifact_dir / "training_config.json"
 
-        if not labels_path.exists() or not keyword_profiles_path.exists() or not training_config_path.exists():
+        if (
+            not labels_path.exists()
+            or not keyword_profiles_path.exists()
+            or not training_config_path.exists()
+        ):
             raise FileNotFoundError(f"Missing artifact files in {artifact_dir}")
 
         labels = json.loads(labels_path.read_text(encoding="utf-8"))
@@ -235,11 +255,15 @@ class InferenceService:
         training_config = json.loads(training_config_path.read_text(encoding="utf-8"))
 
         return LoadedArtifact(
-            version_name=training_config.get("model_version", self.default_model_version),
+            version_name=training_config.get(
+                "model_version", self.default_model_version
+            ),
             labels=labels,
             keyword_profiles=payload.get("keyword_profiles", {}),
             label_priors=payload.get("label_priors", {}),
-            base_model_name=training_config.get("base_model_name", self.base_model_name),
+            base_model_name=training_config.get(
+                "base_model_name", self.base_model_name
+            ),
             backend=training_config.get("training_backend", "keyword-fallback"),
             device=training_config.get("device", self._detect_device()),
         )
@@ -272,10 +296,14 @@ class InferenceService:
             status="healthy" if self._artifact is not None else "degraded",
             model_loaded=self._artifact is not None,
             model_version=(
-                self._artifact.version_name if self._artifact is not None else self.default_model_version
+                self._artifact.version_name
+                if self._artifact is not None
+                else self.default_model_version
             ),
             base_model_name=(
-                self._artifact.base_model_name if self._artifact is not None else self.base_model_name
+                self._artifact.base_model_name
+                if self._artifact is not None
+                else self.base_model_name
             ),
             device=self._device,
             backend=self._backend,

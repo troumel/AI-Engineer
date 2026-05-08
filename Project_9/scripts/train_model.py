@@ -44,8 +44,12 @@ def train_support_ticket_model(
     labels = sorted({example.label for example in train_examples})
     keyword_profiles, label_priors = build_keyword_profiles(train_examples)
 
-    train_metrics = evaluate_examples(train_examples, labels, keyword_profiles, label_priors)
-    validation_metrics = evaluate_examples(validation_examples, labels, keyword_profiles, label_priors)
+    train_metrics = evaluate_examples(
+        train_examples, labels, keyword_profiles, label_priors
+    )
+    validation_metrics = evaluate_examples(
+        validation_examples, labels, keyword_profiles, label_priors
+    )
 
     artifact_dir = models_dir / version_name
     tokenizer_dir = artifact_dir / "tokenizer"

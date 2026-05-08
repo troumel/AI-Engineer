@@ -11,7 +11,6 @@ from app.config import settings
 from app.dependencies import initialize_services
 from app.routers import health, predictions
 
-
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

@@ -5,7 +5,6 @@ from typing import Optional
 from app.config import settings
 from app.services.inference_service import InferenceService
 
-
 _inference_service: Optional[InferenceService] = None
 
 

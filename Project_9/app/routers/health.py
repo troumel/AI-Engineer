@@ -6,7 +6,6 @@ from app.dependencies import get_inference_service
 from app.models.schemas import HealthCheckResponse
 from app.services.inference_service import InferenceService
 
-
 router = APIRouter(tags=["Health"])
 
 
