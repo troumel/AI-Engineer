@@ -1,0 +1,25 @@
+# FastAPI and ASGI server
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
+python-multipart==0.0.20
+
+# Optional production-grade serving stack — offline defaults work without these.
+# vllm==0.6.4                    # PagedAttention + continuous batching
+# transformers==4.46.3
+# accelerate==1.1.1
+# bitsandbytes==0.44.1           # 4/8-bit quantization
+# auto-gptq==0.7.1
+# optimum==1.23.3
+# llama-cpp-python==0.3.2        # GGUF quantized inference
+# prometheus-client==0.21.0      # metrics; we expose Prometheus text format manually
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+httpx==0.28.1
+
+# Environment and logging
+python-dotenv==1.0.1
+python-json-logger==3.2.1

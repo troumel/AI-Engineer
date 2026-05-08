@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  agent-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ai-agent-api:latest
+    ports:
+      - "8005:8005"
+    environment:
+      - APP_NAME=AI Agent API
+      - ENVIRONMENT=production
+      - PLANNER_BACKEND=rule_based
+    volumes:
+      - ../data:/app/data

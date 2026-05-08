@@ -1,0 +1,20 @@
+# FastAPI and API server
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
+python-multipart==0.0.20
+
+# Optional ML stack for production multi-modal upgrades (CLIP / BLIP).
+# The default offline provider works without these, so they are optional.
+# transformers==4.46.3
+# torch==2.5.1
+# Pillow==11.0.0
+
+# Testing
+pytest==8.3.4
+httpx==0.28.1
+
+# Environment and logging
+python-dotenv==1.0.1
+python-json-logger==3.2.1

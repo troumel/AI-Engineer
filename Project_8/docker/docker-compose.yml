@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  custom-llm-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: custom-llm-api:latest
+    ports:
+      - "8007:8007"
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=INFO
+      - LLM_BACKEND=echo
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

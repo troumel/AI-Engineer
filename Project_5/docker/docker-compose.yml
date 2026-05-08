@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  multimodal-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: multimodal-ai-api:latest
+    ports:
+      - "8004:8004"
+    environment:
+      - APP_NAME=Multi-Modal AI API
+      - ENVIRONMENT=production
+      - VISION_PROVIDER=hashing
+    volumes:
+      - ../data:/app/data
